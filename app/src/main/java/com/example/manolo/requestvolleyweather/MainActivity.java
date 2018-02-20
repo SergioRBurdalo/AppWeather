@@ -2,7 +2,11 @@ package com.example.manolo.requestvolleyweather;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
@@ -21,7 +25,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView tv1;
+    ListView lvDatosMeteorologicos;
 
     private static final String URL="http://api.openweathermap.org/data/2.5/forecast?id=3130616&APPID=f13fdba45983a01b4aa61b4bf120aa5b";
 
@@ -31,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        tv1=(TextView)findViewById(R.id.tv1);
+
+        lvDatosMeteorologicos = findViewById(R.id.lvDatosMetereologicos);
+
 
         RequestQueue request = Volley.newRequestQueue(this);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
@@ -68,11 +74,12 @@ public class MainActivity extends AppCompatActivity {
                         String fechaHora = JSONList.getJSONObject(i).getString("dt_txt");
 
 
-
+                        /*
                         cad += fechaHora +":\nTemperatura: "+getTemperatureCelsius(Double.parseDouble(temperatura)) + "º   Presión: "+presion + "mb    Humedad: "+humedad
                                 + "%   Nubosidad: " + nubosidad + "%    Velocidad del viento: "+ velocidadViento
                                 + "m/s   Dirección del viento: "+ direccionViento+ "º    Aspecto: "+aspecto
                                 + "    Icono: "+ icono +"\n\n";
+                        */
 
                         DatosMeteorologicos registro=new DatosMeteorologicos(temperatura, presion, humedad, nubosidad, icono, velocidadViento, direccionViento, aspecto, fechaHora);
 
@@ -81,6 +88,14 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
+
+                    /// SACO EL LIST VIEW
+
+                    AdaptadorWeather adaptador = new AdaptadorWeather(getApplicationContext(), listaDatos);
+                    lvDatosMeteorologicos.setAdapter(adaptador);
+
+
+                    /*
                     //Todo esto es ya de la primera medición (indice 0)
 
                     JSONObject JSONList1=JSONList.getJSONObject(0);
@@ -106,10 +121,10 @@ public class MainActivity extends AppCompatActivity {
                     cad += "\nDirección del viento: " + JSON1Wind.getString("deg")+"º";
 
                     cad += "\nFecha/hora de predicción: " + JSONList1.getString("dt_txt");
+                    */
 
 
 
-                    tv1.setText(cad);
 
 
 
@@ -127,6 +142,18 @@ public class MainActivity extends AppCompatActivity {
 
         });
         request.add(jsonObjectRequest);
+
+
+        lvDatosMeteorologicos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                Toast.makeText(getApplicationContext(), "HACE UN TIEMPO MACARRONUDO PARA IR AL MERCADONA", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
     }
 
     public int getTemperatureCelsius(double tempKelvin){

@@ -1,10 +1,12 @@
 package com.example.manolo.requestvolleyweather;
 
+import java.io.Serializable;
+
 /**
  * Created by Manolo on 20/02/2018.
  */
 
-public class DatosMeteorologicos {
+public class DatosMeteorologicos implements Serializable {
     private String temperatura;
     private String presion;
     private String humedad;
